@@ -59,7 +59,43 @@ cd interntrack
 npm install
 ```
 
-### 3. Add environment variables
+
+
+## 🔐 Google Service Account Setup
+
+This app uses a Google Service Account to access Google Sheets and Google Drive.
+
+### Create a Service Account
+- Go to [Google Cloud Console](https://console.cloud.google.com/)
+- Select or create a project
+- Go to **IAM & Admin > Service Accounts**
+- Click **Create Service Account**, name it (e.g., `interntrack-service`)
+- Assign it the role **Editor**
+- After creating, go to **Keys > Add Key > Create New Key (JSON)**
+
+This will download your `credentials.json`.
+
+> ⚠️ Never upload `credentials.json` to GitHub. Store it locally and securely.
+
+---
+
+### Share Your Google Sheet & Drive Folder
+
+Copy the **email address** of the service account, it looks like:
+
+your-service-account@your-project.iam.gserviceaccount.com
+
+
+- Open your Google Sheet or Drive folder
+- Click **Share**
+- Paste the service account email
+- Set as **Editor**
+
+This allows the backend to read/write Google Sheets and upload files to Drive.
+
+---
+
+### Add environment variables
 
 Create a `.env` file:
 
@@ -67,10 +103,44 @@ Create a `.env` file:
 PORT=3000
 EMAIL_USER=your-email@example.com
 EMAIL_PASS=your-email-password
+ROOT_FOLDER_ID=your root folder id
+ROOT_FOLDER_NAME=your root folder name
+SheetId=your google sheet id
+SheetName=your google sheet name
 ```
 keyFile = Path to your service account key file 
 
 > Note: Never commit real credentials to GitHub.
+
+## 📁 Google Drive & Sheets Configuration
+
+### 🔹 Root Folder (Google Drive)
+- This is the folder where all student documents will be organized.
+- Create a folder in Google Drive (e.g., `InternTrackDocs`)
+- Copy the **folder ID** from the URL:
+
+Example:
+
+https://drive.google.com/drive/folders/1A2B3C4D5E6F7G8H9 → Root Folder ID = 1A2B3C4D5E6F7G8H9
+
+
+### 🔹 Google Sheet (Internship Data)
+- Create or open a Google Sheet
+- Copy the **Sheet ID** from the URL:
+
+Example:
+
+https://docs.google.com/spreadsheets/d/1XyzAbCDEfGHijKLMNopQRsTuvW/edit → Sheet ID = 1XyzAbCDEfGHijKLMNopQRsTuvW
+
+
+- The **Sheet Name** is the tab name at the bottom (e.g., `Sheet1`)
+
+---
+
+### ✅ Don’t forget:
+- **Share the folder and the sheet** with the **Service Account Email**
+- Give it **Editor access**
+
 
 ### 4. Start the server
 
