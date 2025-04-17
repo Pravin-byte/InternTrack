@@ -1,0 +1,30 @@
+# Node modules (required by Node.js, not needed in repo)
+node_modules/
+
+# Uploaded files (user documents, etc.)
+uploads/
+
+# Environment variables
+.env
+
+# API key / service account credentials
+apikey.json
+
+# Sensitive user data and CSV files
+users.json
+Internship.csv
+
+# OS-specific junk
+.DS_Store
+Thumbs.db
+
+# Log files
+*.log
+
+# npm debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# VS Code settings (optional, if you want to ignore your personal editor settings)
+.vscode/

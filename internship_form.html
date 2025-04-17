@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internship Registration Form</title>
+    <style>
+        /* Reset Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(to left, #121212, #2b2b2b);
+    color: #fff;
+    margin: 0;
+    overflow: hidden;
+    transition: background-color 0.3s ease-in-out;
+}
+
+/* Form Container */
+.form-container {
+    background: #1f1f1f;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.4);
+    width: 100%;
+    max-width: 600px;
+    max-height: 90vh;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    overflow-y: auto;
+    animation: slideIn 0.6s ease-out;
+}
+
+/* Animation for Form */
+@keyframes slideIn {
+    0% {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Header */
+h2 {
+    text-align: center;
+    font-size: 2.2rem;
+    color: #007bff;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Form Elements */
+label {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #ccc;
+    display: block;
+    margin: 15px 0 5px;
+    transition: color 0.3s ease;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 14px 16px;
+    margin: 8px 0;
+    border: 1px solid #444;
+    border-radius: 8px;
+    background-color: #333;
+    font-size: 1rem;
+    color: #fff;
+    outline: none;
+    transition: border 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input::placeholder {
+    color: #999;
+}
+
+input:focus,
+select:focus {
+    border-color: #007bff;
+    background-color: #444;
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+}
+
+/* Buttons */
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 14px;
+    margin-top: 20px;
+    cursor: pointer;
+    width: 100%;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+}
+
+button:hover {
+    background-color: #0056b3;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+button:focus {
+    outline: none;
+    box-shadow: 0 0 15px rgba(0, 123, 255, 0.6);
+}
+
+/* Checkbox */
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: normal;
+    cursor: pointer;
+}
+
+input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: #007bff;
+}
+
+/* Error Messages */
+.error {
+    color: #d9534f;
+    font-size: 0.85rem;
+    display: none;
+    margin-top: 4px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    body {
+        padding: 15px;
+    }
+
+    .form-container {
+        width: 100%;
+        padding: 20px;
+    }
+
+    h2 {
+        font-size: 1.8rem;
+    }
+
+    button {
+        padding: 12px;
+    }
+}
+
+/* Dark Mode Enhancements */
+body.dark {
+    background-color: #121212;
+}
+
+body.dark .form-container {
+    background-color: #1f1f1f;
+    box-shadow: 0 16px 32px rgba(255, 255, 255, 0.1);
+}
+
+body.dark input,
+body.dark select {
+    background-color: #333;
+    color: #fff;
+    border: 1px solid #555;
+}
+
+body.dark input:focus,
+body.dark select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+}
+
+body.dark button {
+    background-color: #007bff;
+}
+
+body.dark button:hover {
+    background-color: #0056b3;
+}
+
+/* Floating Action Button */
+.fab {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.fab:hover {
+    background-color: #0056b3;
+    transform: translateY(-3px);
+}
+
+.fab:active {
+    transform: translateY(0);
+}
+
+/* Gradient Background */
+body.dark {
+    background: linear-gradient(to left, #121212, #2b2b2b);
+}
+
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <h2>Internship Registration</h2>
+        <form id="internshipForm">
+            <label for="regNumber">Register Number:</label>
+            <input type="text" id="regNumber" name="regNumber" required>
+
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="mobile">Mobile No.:</label>
+            <input type="text" id="mobile" name="mobile" required>
+            <span class="error" id="mobileError">Must be a 10-digit number</span>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required />
+
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" required>
+
+            <label for="year">Year:</label>
+            <input type="number" id="year" name="year" min="2000" max="2099" required placeholder="e.g., 2023"> 
+
+            <label for="department">Department:</label>
+            <input type="text" id="department" name="department" required>
+
+            <label for="section">Section:</label>
+            <input type="text" id="section" name="section" required>
+
+            <label>Obtained Internship:</label>
+            <select id="internship" name="internship" required onchange="toggleUploadFields()">
+                <option value="">Select</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
+
+            <div id="uploadFields" style="display: none;">
+                <label for="period">Period:</label>
+                <input type="text" id="period" name="period" placeholder="e.g., 2 months">
+                <span class="error" id="periodError">Period must match the duration between Start and End Date</span>
+
+                <label for="startDate">Start Date:</label>
+                <input type="date" id="startDate" name="startDate">
+
+                <label for="endDate">End Date:</label>
+                <input type="date" id="endDate" name="endDate">
+                <span class="error" id="dateError">Start date must be before end date</span>
+
+                <label for="companyName">Company Name:</label>
+                <input type="text" id="companyName" name="companyName">
+
+               <label for="placementSource">Placement Source:</label>
+                <select id="placementSource" name="placementSource" required>
+                    <option value="CDC">CDC</option>
+                    <option value="NON-CDC">NON-CDC</option>
+                </select>
+
+                <label for="stipend">Stipend (In Rs.):</label>
+                <input type="number" id="stipend" name="stipend">
+                <span class="error" id="stipendError">Must be a valid positive number</span>
+
+                <label for="internshipType">Internship Type:</label>
+                <select id="internshipType" name="internshipType">
+                    <option value="Academic">Academic</option>
+                    <option value="industry">industry</option>
+                </select>
+
+                <label for="abroadIndia">Abroad / India:</label>
+                <select id="abroadIndia" name="abroadIndia">
+                    <option value="India">India</option>
+                    <option value="Abroad">Abroad</option>
+                </select>
+
+                <label>Document Submission:</label>
+                <div class="checkbox-group">
+                    <label>
+                        <input type="checkbox" name="documents[]" value="Signed Permission Letter, Offer Letter Submitted">
+                        Signed Permission Letter, Offer Letter Submitted
+                    </label>
+                    <label>
+                        <input type="checkbox" name="documents[]" value="Completion Certificate Submitted">
+                        Completion Certificate Submitted
+                    </label>
+                    <label>
+                        <input type="checkbox" name="documents[]" value="Internship Report Submitted">
+                        Internship Report Submitted
+                    </label>
+                    <label>
+                        <input type="checkbox" name="documents[]" value="Student Feedback Submitted">
+                        Student Feedback Submitted
+                    </label>
+                    <label>
+                        <input type="checkbox" name="documents[]" value="Employer Feedback Submitted">
+                        Employer Feedback Submitted
+                    </label>
+                </div>
+
+               
+                <label for="offerLetter">Internship Offer Letter:</label>
+                <input type="file" id="offerLetter" name="offerLetter" accept=".pdf,.doc,.docx,.jpg,.png" >
+
+                <label for="permissionLetter">Department Permission Letter:</label>
+                <input type="file" id="permissionLetter" name="permissionLetter" accept=".pdf,.doc,.docx,.jpg,.png" >
+                
+                <label for="completionCertificate">Completion Certificate:</label>
+                <input type="file" id="completionCertificate" name="completionCertificate" accept=".pdf,.doc,.docx,.jpg,.png" >
+
+                <label for="internshipReport">Internship Report:</label>
+                <input type="file" id="internshipReport" name="internshipReport" accept=".pdf,.doc,.docx,.jpg,.png" >
+
+                <label for="studentFeedback">Student Feedback File:</label>
+                <input type="file" id="studentFeedback" name="studentFeedback" accept=".pdf,.doc,.docx,.jpg,.png">
+                
+            </div>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <script>
+       document.addEventListener("DOMContentLoaded", async () => {
+            const userType = sessionStorage.getItem("userType");
+            const regNumber = sessionStorage.getItem("regNumber");
+
+            if (userType === "student" && regNumber) {
+                try {
+                    const res = await fetch(`/student/${regNumber}`);
+                    if (!res.ok) throw new Error("Student not found");
+                    const student = await res.json();
+
+                    // Fill in fields
+                    document.getElementById("regNumber").value = student.regNumber || "";
+                    document.getElementById("name").value = student.name || "";
+                    document.getElementById("year").value = student.year || "";
+                    document.getElementById("department").value = student.department || "";
+                    document.getElementById("section").value = student.section || "";
+
+                    // Lock them
+                    document.getElementById("regNumber").readOnly = true;
+                    document.getElementById("name").readOnly = true;
+                    document.getElementById("year").readOnly = true;
+                    document.getElementById("department").readOnly = true;
+                    document.getElementById("section").readOnly = true;
+
+                    // Autofill rest of form
+                    autofillForm();
+                } catch (err) {
+                    console.error("Failed to fetch student data:", err);
+                }
+            } else {
+                // Staff mode: fill rest of form if ?regNumber=123 exists
+                autofillForm();
+            }
+        });
+
+
+        function toggleUploadFields() {
+            const internship = document.getElementById("internship").value;
+            const uploadFields = document.getElementById("uploadFields");
+    
+            if (internship === "yes") {
+                uploadFields.style.display = "block";
+                document.getElementById("period").required = true;
+                document.getElementById("startDate").required = true;
+                document.getElementById("endDate").required = true;
+                document.getElementById("companyName").required = true;
+            } else {
+                uploadFields.style.display = "none";
+                document.getElementById("period").required = false;
+                document.getElementById("startDate").required = false;
+                document.getElementById("endDate").required = false;
+                document.getElementById("companyName").required = false;
+            }
+        }
+    
+        document.getElementById("internshipForm").addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            let isValid = true;
+
+            // === VALIDATIONS (same as before) ===
+            const mobile = document.getElementById("mobile");
+            const mobileError = document.getElementById("mobileError");
+            if (!/^[0-9]{10}$/.test(mobile.value)) {
+                mobileError.style.display = "block";
+                isValid = false;
+            } else {
+                mobileError.style.display = "none";
+            }
+
+            const startDate = document.getElementById("startDate");
+            const endDate = document.getElementById("endDate");
+            const dateError = document.getElementById("dateError");
+            if (startDate.value && endDate.value && new Date(startDate.value) >= new Date(endDate.value)) {
+                dateError.style.display = "block";
+                isValid = false;
+            } else {
+                dateError.style.display = "none";
+            }
+
+            const stipend = document.getElementById("stipend");
+            const stipendError = document.getElementById("stipendError");
+            const stipendValue = stipend.value.trim();
+            if (!stipendValue || isNaN(stipendValue) || parseFloat(stipendValue) < 0) {
+                stipendError.style.display = "block";
+                isValid = false;
+            } else {
+                stipendError.style.display = "none";
+            }
+
+            const period = document.getElementById("period");
+            const periodError = document.getElementById("periodError");
+            if (startDate.value && endDate.value) {
+                const start = new Date(startDate.value);
+                const end = new Date(endDate.value);
+                const diffInMonths = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth());
+                if (parseInt(period.value) !== diffInMonths) {
+                    periodError.style.display = "block";
+                    periodError.innerText = `Period must match the duration between dates (${diffInMonths} months)`;
+                    isValid = false;
+                } else {
+                    periodError.style.display = "none";
+                }
+            }
+
+            if (!isValid) return;
+
+            // === COLLECT NON-FILE DATA ===
+            const formData = new FormData(this);
+            const data = {};
+
+            formData.forEach((value, key) => {
+                if (!key.includes("File") && !key.includes("file")) {
+                    if (data[key]) {
+                        if (!Array.isArray(data[key])) {
+                            data[key] = [data[key]];
+                        }
+                        data[key].push(value);
+                    } else {
+                        data[key] = value;
+                    }
+                }
+            });
+
+            const allDocs = [
+                "Signed Permission Letter, Offer Letter Submitted",
+                "Completion Certificate Submitted",
+                "Internship Report Submitted",
+                "Student Feedback Submitted",
+                "Employer Feedback Submitted"
+            ];
+
+            allDocs.forEach(doc => {
+                data[doc] = "No";
+            });
+
+            if (data["documents[]"]) {
+                const selectedDocs = Array.isArray(data["documents[]"]) ? data["documents[]"] : [data["documents[]"]];
+                selectedDocs.forEach(doc => {
+                    data[doc] = "Yes";
+                });
+                delete data["documents[]"];
+            }
+            console.log("🚀 Final data before sending to /add-student:", data);
+
+            try {
+                // === 1. POST DATA (JSON) ===
+                const response = await fetch("http://localhost:3000/add-student", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data),
+                });
+
+                if (!response.ok) {
+                    const msg = await response.text();
+                    alert("Data submission failed: " + msg);
+                    return;
+                }
+
+                // === 2. POST FILES (FormData) ===
+                const fileFormData = new FormData();
+                const fileFields = ["offerLetter", "permissionLetter", "completionCertificate", "internshipReport", "studentFeedback"];
+                fileFields.forEach((id) => {
+                    const fileInput = document.getElementById(id);
+                    if (fileInput && fileInput.files.length > 0) {
+                        fileFormData.append(id, fileInput.files[0]);
+                    }
+                });
+                
+                console.log('RegNumber:', document.getElementById("regNumber").value);
+                console.log('Name:', document.getElementById("name").value);
+                console.log('Year:', document.getElementById("year").value);
+
+                fileFormData.append("regNumber", document.getElementById("regNumber").value);
+                fileFormData.append("name", document.getElementById("name").value);
+                fileFormData.append("year", document.getElementById("year").value);
+
+                console.log('Form Data before sending:', {
+                    regNumber: fileFormData.get('regNumber'),
+                    name: fileFormData.get('name'),
+                    year: fileFormData.get('year')
+                });
+
+                const fileUploadResponse = await fetch("http://localhost:3000/upload", {
+                    method: "POST",
+                    body: fileFormData,
+                });
+
+                if (!fileUploadResponse.ok) {
+                    alert("Files upload failed.");
+                    return;
+                }
+
+                alert("Student data and files submitted successfully!");
+                this.reset();
+                toggleUploadFields();
+
+            } catch (error) {
+                console.error("Error:", error);
+                alert("Could not connect to server.");
+            }
+        });
+
+
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        async function autofillForm() {
+            const regNumber = getQueryParam("regNumber");
+            if (!regNumber) return;
+
+            try {
+                const response = await fetch(`/student/${regNumber}`);
+                if (!response.ok) throw new Error("Student not found");
+
+                const student = await response.json();
+                document.getElementById("regNumber").value = student.regNumber || "";
+                document.getElementById("name").value = student.name || "";
+                document.getElementById("mobile").value = student.mobile || "";
+                document.getElementById("email").value = student.email || "";
+                document.getElementById("title").value = student.title || "";
+                document.getElementById("year").value = student.year || "";
+                document.getElementById("department").value = student.department || "";
+                document.getElementById("section").value = student.section || "";
+                document.getElementById("internship").value = student.internship || "no";
+                document.getElementById("period").value = student.period || "";
+                document.getElementById("startDate").value = student.startDate || "";
+                document.getElementById("endDate").value = student.endDate || "";
+                document.getElementById("companyName").value = student.companyName || "";
+                document.getElementById("placementSource").value = student.placementSource || "CDC";
+                document.getElementById("stipend").value = student.stipend || "";
+                document.getElementById("internshipType").value = student.internshipType || "industrial";
+                document.getElementById("location").value = student.abroadIndia === "abroad" ? "abroad" : "india";
+            } catch (err) {
+                console.error("Error fetching student:", err);
+            }
+        }
+
+        window.onload = autofillForm;
+        // Flag to track unsaved data for each form
+        let isFormDirty = {};
+
+        // Get all forms on the page
+        const forms = document.querySelectorAll("form");
+
+        // Add event listeners to each form
+        forms.forEach((form, index) => {
+        // Initialize dirty flag for each form
+        isFormDirty[index] = false;
+
+        // Track changes in each form's inputs
+        form.addEventListener("input", function() {
+            isFormDirty[index] = true;
+        });
+
+        // Reset dirty flag when the form is submitted
+        form.addEventListener("submit", function() {
+            isFormDirty[index] = false;
+        });
+        });
+
+        // Handle beforeunload event
+        window.addEventListener("beforeunload", function(event) {
+        // Check if any form is dirty
+        for (let i = 0; i < forms.length; i++) {
+            if (isFormDirty[i]) {
+            const message = "You have unsaved data. Do you really want to leave?";
+            event.returnValue = message;  // Standard for most browsers
+            return message;  // Standard for some browsers like Chrome
+            }
+        }
+        });
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Create Account</title>
+  <style>
+    /* Color Palette for Dark Theme */
+:root {
+  --primary: #4a90e2;
+  --primary-dark: #357ABD;
+  --bg: #121212;
+  --white: #ffffff;
+  --light-gray: #f4f4f4;
+  --dark-gray: #333;
+  --shadow: rgba(0, 0, 0, 0.6);
+  --error: #e63946;
+  --success: #2a9d8f;
+}
+
+/* Reset Global Styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Body */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--bg);
+  color: var(--light-gray);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  transition: background-color 0.3s ease;
+}
+
+/* Main Container */
+.container {
+  background: var(--dark-gray);
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px var(--shadow);
+  max-width: 400px;
+  width: 100%;
+  animation: fadeIn 0.6s ease;
+}
+
+/* Fade In Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Heading */
+h2 {
+  text-align: center;
+  color: var(--white);
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+/* Form Container */
+.form-container {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Input Fields */
+input,
+select {
+  padding: 12px;
+  margin: 8px 0;
+  border: 1px solid #444;
+  border-radius: 8px;
+  background-color: #333;
+  color: var(--light-gray);
+  font-size: 14px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  outline: none;
+}
+
+input:focus,
+select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 5px var(--primary);
+}
+
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='14' height='10' viewBox='0 0 14 10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l6 6 6-6' stroke='%234a90e2' stroke-width='2' fill='none' fill-rule='evenodd'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 12px;
+}
+
+/* Button */
+button {
+  padding: 12px;
+  background-color: var(--primary);
+  color: var(--white);
+  border: none;
+  border-radius: 8px;
+  margin-top: 15px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+button:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-1px);
+}
+
+button:active {
+  background-color: #2c6abf;
+  transform: translateY(1px);
+}
+
+/* Error & Success Messages */
+.error-message {
+  color: var(--error);
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+.success-message {
+  color: var(--success);
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+/* Link Styling */
+.login-link {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.login-link a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.login-link a:hover {
+  text-decoration: underline;
+}
+
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Create New Account</h2>
+
+    <!-- Student Registration Form -->
+    <div class="form-container" id="studentForm">
+      <input type="text" id="studentRegNumber" placeholder="Register Number" required />
+      <select id="studentSecurityQuestion" required>
+        <option value="">Select a security question</option>
+        <option value="What is your favorite color?">What is your favorite color?</option>
+        <option value="What is your pet's name?">What is your pet's name?</option>
+        <option value="What is your mother's maiden name?">What is your mother's maiden name?</option>
+        <option value="What was the name of your first school?">What was the name of your first school?</option>
+      </select>
+
+      <input type="text" id="studentSecurityAnswer" placeholder="Your Answer" required />
+
+      <input type="password" id="studentPassword" placeholder="Password" required />
+      <input type="password" id="studentConfirmPassword" placeholder="Confirm Password" required />
+      <p class="error-message" id="studentError"></p>
+      <p class="success-message" id="studentSuccess"></p>
+      <button onclick="submitForm('student')">Create Student Account</button>
+    </div>
+
+    <div class="login-link">
+      Already have an account? <a href="login.html">Login</a>
+    </div>
+  </div>
+
+  <script>
+    async function submitForm(userType) {
+      const regNumber = document.getElementById("studentRegNumber").value.trim();
+      const password = document.getElementById("studentPassword").value;
+      const confirmPassword = document.getElementById("studentConfirmPassword").value;
+      const securityQuestion = document.getElementById("studentSecurityQuestion").value;
+      const securityAnswer = document.getElementById("studentSecurityAnswer").value.trim();
+
+      const errorEl = document.getElementById("studentError");
+      const successEl = document.getElementById("studentSuccess");
+
+      errorEl.textContent = "";
+      successEl.textContent = "";
+
+      if (!regNumber || !password || !confirmPassword || !securityQuestion || !securityAnswer) {
+        errorEl.textContent = "Please fill in all fields.";
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        errorEl.textContent = "Passwords do not match.";
+        return;
+      }
+
+      const payload = {
+        regNumber,
+        password,
+        confirmPassword,
+        userType: "student",
+        securityQuestion,
+        securityAnswer
+      };
+
+      try {
+        const response = await fetch("/api/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          successEl.textContent = "Account created successfully! Redirecting to login...";
+          setTimeout(() => {
+            window.location.href = "login.html";
+          }, 2000);
+        } else {
+          errorEl.textContent = result.message || "Registration failed.";
+        }
+      } catch (err) {
+        errorEl.textContent = "Server error.";
+      }
+    }
+  </script>
+</body>

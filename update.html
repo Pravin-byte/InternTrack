@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Update Student</title>
+  <style>
+    body {
+      background: linear-gradient(135deg, #121212, #181818, #2e2e2e);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      color: #f1f1f1;
+      min-height: 100vh;
+    }
+
+    .form-container {
+      background: rgba(30, 30, 30, 0.9);
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(10px);
+      transition: all 0.4s ease;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+ 
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #ffffff;
+      font-size: 32px;
+      letter-spacing: 1px;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+    }
+
+    .form-group {
+      margin-bottom: 22px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #dddddd;
+      font-size: 15px;
+      transition: color 0.3s ease;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #444;
+      border-radius: 10px;
+      font-size: 15px;
+      background-color: #1f1f1f;
+      color: #ffffff;
+      transition: border 0.3s ease, background-color 0.3s ease, transform 0.2s;
+      box-shadow: inset 0 0 4px rgba(0,0,0,0.3);
+    }
+
+    input::placeholder,
+    select option {
+      color: #aaa;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #00bcd4;
+      background-color: #2b2b2b;
+      transform: scale(1.02);
+    }
+
+    .form-section {
+      margin-top: 25px;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      opacity: 0;
+      transform: translateY(20px);
+      pointer-events: none;
+      height: 0;
+      overflow: hidden;
+    }
+
+    .form-section.show {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+      height: auto;
+    }
+
+    .btn {
+      padding: 14px 28px;
+      background: linear-gradient(135deg, #007bff, #00bcd4);
+      color: #ffffff;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 188, 212, 0.3);
+    }
+
+    .btn:hover {
+      background: linear-gradient(135deg, #0056b3, #0097a7);
+      transform: translateY(-2px);
+    }
+
+    #buttonSection {
+      text-align: center;
+      margin-bottom: 25px;
+      transition: opacity 0.5s ease;
+    }
+
+    #buttonSection .btn {
+      margin: 10px 12px;
+      background: #333;
+      border: 1px solid #444;
+    }
+
+    #buttonSection .btn:hover {
+      background-color: #444;
+    }
+
+    .error {
+      color: #ff6b6b;
+      font-size: 13px;
+      margin-top: 6px;
+      display: none;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .back-btn {
+      display: block;
+      margin: 30px auto 0;
+      background-color: #555;
+      color: #f1f1f1;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-weight: bold;
+      transition: background 0.3s ease;
+    }
+
+    .back-btn:hover {
+      background-color: #333;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .form-container {
+        padding: 25px 20px;
+      }
+
+      .btn,
+      #buttonSection .btn {
+        width: 100%;
+        margin: 12px 0;
+      }
+    }
+
+  </style>
+  
+</head>
+<body>
+  <div class="form-container">
+    <h2>Update My Information</h2>
+
+    <div id="buttonSection">
+      <button id="updateDataBtn" class="btn">Update Only Data</button>
+      <button id="updateFilesBtn" class="btn">Update Only Files</button>
+    </div>
+
+    <form id="updateForm" class="hidden" enctype="multipart/form-data">
+     
+
+      <div id="dataFields" class="form-section hidden">
+       
+        <div class="form-group"><label for="regNumber">RegNumber (can only be changed by the admin.)</label> <input type="text" id="regNumber" name="regNumber" readonly></div>
+        <div class="form-group"><label for="name">Name (can only be changed by the admin.)</label><input type="text" id="name" name="name" readonly></div>
+        <div class="form-group"><label for="mobile">Mobile</label><input type="text" id="mobile" name="mobile">
+          <div id="mobileError" class="error">Please enter a valid 10-digit mobile number.</div>
+        </div>
+        <div class="form-group"><label for="email">Email</label><input type="email" id="email" name="email" required /></div>
+      
+        <div class="form-group"><label for="title">Title</label><input type="text" id="title" name="title"></div>
+        <div class="form-group"><label for="year">Year (can only be changed by the admin.)</label><input type="text" id="year" name="year" readonly></div>
+        <div class="form-group"><label for="department">Department</label><input type="text" id="department" name="department"></div>
+        <div class="form-group"><label for="section">Section</label><input type="text" id="section" name="section"></div>
+        <div class="form-group"><label for="period">Period (in months)</label><input type="text" id="period" name="period">
+          <div id="periodError" class="error">Please ensure the period matches the date range.</div>
+        </div>
+        <div class="form-group"><label for="startDate">Start Date</label><input type="date" id="startDate" name="startDate" required></div>
+        <div class="form-group"><label for="endDate">End Date</label><input type="date" id="endDate" name="endDate" required>
+          <div id="dateError" class="error">End date must be after start date.</div>
+        </div>
+        <div class="form-group"><label for="companyName">Company Name</label><input type="text" id="companyName" name="companyName"></div>
+        <div class="form-group"><label for="stipend">Stipend</label><input type="number" id="stipend" name="stipend">
+          <div id="stipendError" class="error">Please enter a valid stipend amount.</div>
+        </div>
+        <div class="form-group">
+            <label for="placementSource">Placement Source</label>
+            <select id="placementSource" name="placementSource" required>
+              <option value="CDC">CDC</option>
+              <option value="NON-CDC">NON-CDC</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="internshipType">Internship Type</label>
+            <select id="internshipType" name="internshipType" required>
+              <option value="research">Research</option>
+              <option value="industry">Industrial</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="abroadIndia">Abroad / India</label>
+            <select id="abroadIndia" name="abroadIndia" required>
+              <option value="india">India</option>
+              <option value="abroad">Abroad</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="internship">Obtained Internship:</label>
+            <select id="internship" name="internship" required>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
+
+        </div>
+        <button type="button" class="btn back-btn" onclick="showMainButtons()">← Back</button>
+      </div>
+
+      <div id="fileFields" class="form-section hidden">
+        <div class="form-group"><label for="offerLetter">Offer Letter</label><input type="file" id="offerLetter" name="offerLetter"></div>
+        <div class="form-group"><label for="permissionLetter">Permission Letter</label><input type="file" id="permissionLetter" name="permissionLetter"></div>
+        <div class="form-group"><label for="completionCertificate">Completion Certificate</label><input type="file" id="completionCertificate" name="completionCertificate"></div>
+        <div class="form-group"><label for="internshipReport">Internship Report</label><input type="file" id="internshipReport" name="internshipReport"></div>
+        <div class="form-group"><label for="studentFeedback">Student Feedback</label><input type="file" id="studentFeedback" name="studentFeedback"></div>
+        <button type="button" class="btn back-btn" onclick="showMainButtons()">← Back</button>
+      </div>
+      
+      <button type="submit" class="btn">Submit</button>
+    </form>
+  </div>
+
+  <script>
+      function showMainButtons() {
+        dataFields.classList.remove('show');
+        fileFields.classList.remove('show');
+        dataFields.classList.add('hidden');
+        fileFields.classList.add('hidden');
+        updateForm.classList.add('hidden');
+        buttonSection.style.display = 'block';
+      }
+      const regNo = sessionStorage.getItem("regNumber");
+      const updateForm = document.getElementById('updateForm');
+      const buttonSection = document.getElementById('buttonSection');
+      const dataFields = document.getElementById('dataFields');
+      const fileFields = document.getElementById('fileFields');
+
+      document.getElementById('updateDataBtn').addEventListener('click', () => {
+        buttonSection.style.display = 'none';
+        updateForm.classList.remove('hidden');
+        fileFields.classList.remove('show');
+        fileFields.classList.add('hidden');
+        dataFields.classList.remove('hidden');
+        dataFields.classList.add('show');
+      });
+
+      document.getElementById('updateFilesBtn').addEventListener('click', () => {
+        buttonSection.style.display = 'none';
+        updateForm.classList.remove('hidden');
+        dataFields.classList.remove('show');
+        dataFields.classList.add('hidden');
+        fileFields.classList.remove('hidden');
+        fileFields.classList.add('show');
+      });
+
+    async function loadStudentData() {
+      if (!regNo) {
+        alert("No student logged in!");
+        return;
+      }
+
+      try {
+        const res = await fetch("/students");
+        const students = await res.json();
+        const student = students.find(s => s.regNumber === regNo);
+
+        if (!student) {
+          alert("Student not found!");
+          return;
+        }
+
+        // Autofill data fields
+        document.getElementById("regNumber").value = student.regNumber || "";
+        document.getElementById("name").value = student.name || "";
+        document.getElementById("mobile").value = student.mobile || "";
+        document.getElementById("email").value = student.email || "";
+        document.getElementById("title").value = student.title || "";
+        document.getElementById("year").value = student.year || "";
+        document.getElementById("department").value = student.department || "";
+        document.getElementById("section").value = student.section || "";
+        document.getElementById("period").value = student.period || "";
+        document.getElementById("startDate").value = student.startDate || "";
+        document.getElementById("endDate").value = student.endDate || "";
+        document.getElementById("companyName").value = student.companyName || "";
+        document.getElementById("stipend").value = student.stipend || "";
+        document.getElementById("placementSource").value = student.placementSource || "CDC";
+        document.getElementById("internshipType").value = student.internshipType || "industrial";
+        document.getElementById("abroadIndia").value = (student.abroadIndia || "").toLowerCase() === "abroad" ? "abroad" : "india";
+      } catch (err) {
+        console.error("Error loading data:", err);
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadStudentData();
+
+      const updateForm = document.getElementById("updateForm");
+      const dataFields = document.getElementById("dataFields");
+      const fileFields = document.getElementById("fileFields");
+
+      document.getElementById("updateDataBtn").addEventListener("click", () => {
+        updateForm.classList.remove("hidden");
+        dataFields.classList.remove("hidden");
+        fileFields.classList.add("hidden");
+        document.getElementById("buttonSection").classList.add("hidden");
+      });
+
+      document.getElementById("updateFilesBtn").addEventListener("click", () => {
+        updateForm.classList.remove("hidden");
+        fileFields.classList.remove("hidden");
+        dataFields.classList.add("hidden");
+        document.getElementById("buttonSection").classList.add("hidden");
+      });
+
+      updateForm.addEventListener("submit", async function (e) {
+        e.preventDefault();
+        let isValid = true;
+
+        const mobile = document.getElementById("mobile");
+        const mobileError = document.getElementById("mobileError");
+        if (!/^[0-9]{10}$/.test(mobile.value)) {
+            mobileError.style.display = "block";
+            isValid = false;
+        } else {
+            mobileError.style.display = "none";
+        }
+
+        const startDate = document.getElementById("startDate");
+        const endDate = document.getElementById("endDate");
+        const dateError = document.getElementById("dateError");
+        if (new Date(startDate.value) >= new Date(endDate.value)) {
+            dateError.style.display = "block";
+            isValid = false;
+        } else {
+            dateError.style.display = "none";
+        }
+
+        const stipend = document.getElementById("stipend");
+        const stipendError = document.getElementById("stipendError");
+        const stipendValue = stipend.value.trim();
+        if (!stipendValue || isNaN(stipendValue) || parseFloat(stipendValue) < 0) {
+            stipendError.style.display = "block";
+            isValid = false;
+        } else {
+            stipendError.style.display = "none";
+        }
+
+        const period = document.getElementById("period");
+        const periodError = document.getElementById("periodError");
+        if (startDate.value && endDate.value) {
+            const start = new Date(startDate.value);
+            const end = new Date(endDate.value);
+            const diffInMonths = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth());
+
+            if (parseInt(period.value) !== diffInMonths) {
+            periodError.style.display = "block";
+            periodError.innerText = `Period must match the duration between dates (${diffInMonths} months)`;
+            isValid = false;
+            } else {
+            periodError.style.display = "none";
+            }
+        }
+
+        if (!isValid) {
+            return; // Stop form submission if validation fails
+        }
+
+        const formData = new FormData(updateForm);
+        const formObject = {};
+        formData.forEach((value, key) => {
+            formObject[key] = value;
+        });
+
+        const mode = !dataFields.classList.contains("hidden") ? "data" : "files";
+        const regNumber = formObject.regNumber;
+        const url = mode === "data" 
+            ? "/update-student" 
+            : `/update-files/${encodeURIComponent(regNumber)}`;
+
+        if (mode === "data") {
+            try {
+                const response = await fetch(url, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(formObject),
+                });
+
+                const result = await response.json();
+                alert(response.ok ? "✅ Update successful!" : "❌ Update failed: " + result.message);
+            } catch (err) {
+                console.error("Submit error:", err);
+                alert("❌ Network error while updating.");
+            }
+        } else {
+            try {
+                const response = await fetch(url, {
+                    method: "PUT",
+                    body: formData, // Important: don't set Content-Type manually here!
+                });
+
+                const result = await response.json();
+                alert(response.ok ? "✅ Update successful!" : "❌ Update failed: " + result.message);
+            } catch (err) {
+                console.error("Submit error:", err);
+                alert("❌ Network error while updating.");
+            }
+        }
+
+
+        });
+
+    });
+    let isFormDirty = {};
+
+    // Get all forms on the page
+    const forms = document.querySelectorAll("form");
+
+    // Add event listeners to each form
+    forms.forEach((form, index) => {
+    // Initialize dirty flag for each form
+    isFormDirty[index] = false;
+
+    // Track changes in each form's inputs
+    form.addEventListener("input", function() {
+        isFormDirty[index] = true;
+    });
+
+    // Reset dirty flag when the form is submitted
+    form.addEventListener("submit", function() {
+        isFormDirty[index] = false;
+      });
+    });
+
+    // Handle beforeunload event
+    window.addEventListener("beforeunload", function(event) {
+    // Check if any form is dirty
+    for (let i = 0; i < forms.length; i++) {
+        if (isFormDirty[i]) {
+        const message = "You have unsaved data. Do you really want to leave?";
+        event.returnValue = message;  // Standard for most browsers
+        return message;  // Standard for some browsers like Chrome
+        }
+      }
+    });
+
+  </script>
+</body>
+</html>

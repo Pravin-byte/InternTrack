@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="icon" href="tap_logo.png" type="image/png" id="logo">
+    <style>
+        * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    justify-content: center;
+    background: linear-gradient(135deg, #121212, #1e1e2f); /* dark gradient */
+    color: #f0f0f0;
+}
+
+.tabs-container {
+    display: flex;
+    justify-content: center;
+    width: 360px;
+    background: #1f1f2e;
+    border-radius: 10px;
+    padding: 8px;
+    margin-bottom: 20px;
+    position: relative;
+    box-shadow: 0 0 10px rgba(0,0,0,0.4);
+}
+
+.tabs {
+    display: flex;
+    width: 100%;
+    position: relative;
+}
+
+.tab {
+    flex: 1;
+    text-align: center;
+    padding: 12px 0;
+    font-weight: bold;
+    cursor: pointer;
+    color: #ccc;
+    transition: 0.3s ease;
+    position: relative;
+    z-index: 2;
+}
+
+.tab:hover {
+    color: #00aaff;
+}
+
+.underline {
+    position: absolute;
+    bottom: 0;
+    height: 4px;
+    width: 50%;
+    background: #00aaff;
+    transition: transform 0.3s ease-in-out;
+    border-radius: 4px;
+    left: 0;
+}
+
+.login-container {
+    display: none;
+    background: #2c2c3e;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    width: 350px;
+    border: 1px solid #444;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+}
+
+.active {
+    display: block;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    margin: 12px 0;
+    border: none;
+    background: #3a3a4f;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 16px;
+    outline: none;
+}
+
+input::placeholder {
+    color: #aaa;
+}
+
+button {
+    background: linear-gradient(to right, #0066cc, #004080);
+    color: white;
+    border: none;
+    padding: 12px;
+    cursor: pointer;
+    width: 100%;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    background: linear-gradient(to right, #007bff, #0055aa);
+}
+
+.error-message {
+    color: #ff6b6b;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.auth-links {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.auth-links p {
+    margin: 6px 0;
+}
+
+.auth-links a {
+    color: #33bbff;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.auth-links a:hover {
+    text-decoration: underline;
+}
+
+.title {
+    font-size: 36px;
+    font-weight: 700;
+    color: #66ccff;
+    margin-bottom: 50px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+#logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #00aaff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+
+    </style>
+</head>
+<body onload="showLogin('student')">
+    <div class="title">InternTrack</div>
+    <div class="tabs-container">
+      <div class="tabs">
+        <div class="tab" id="staffTab" onclick="showLogin('staff')">STAFF LOGIN</div>
+        <div class="tab" id="studentTab" onclick="showLogin('student')">STUDENT LOGIN</div>
+      </div>
+      <div class="underline" id="underline"></div>
+    </div>
+  
+    <div id="staffLogin" class="login-container">
+      <h2>Staff Login</h2>
+      <form id="staffLoginForm">
+        <input type="text" id="staffUsername" placeholder="Username" required>
+        <input type="password" id="staffPassword" placeholder="Password" required>
+        <p class="error-message" id="staffErrorMessage"></p>
+        <button type="submit">Login</button>
+      </form>
+    </div>
+  
+    <div id="studentLogin" class="login-container active">
+      <h2>Student Login</h2>
+      <form id="studentLoginForm">
+        <input type="text" id="studentRegNumber" placeholder="Register Number" required>
+        <input type="password" id="studentPassword" placeholder="Password" required>
+        <p class="error-message" id="studentErrorMessage"></p>
+        <button type="submit">Login</button>
+      </form>
+      <div class="auth-links">
+        <p>Don't have an account? 
+          <a href="register.html">Create New Account</a>
+        </p>
+        <p><a href="forgot-password.html">Forgot Password?</a></p>
+      </div>
+      
+    </div>
+    
+  
+    <script>
+      function showLogin(type) {
+        const staff = document.getElementById("staffLogin");
+        const student = document.getElementById("studentLogin");
+        const underline = document.getElementById("underline");
+  
+        if (type === "staff") {
+          staff.classList.add("active");
+          student.classList.remove("active");
+          underline.style.transform = "translateX(0%)";
+        } else {
+          student.classList.add("active");
+          staff.classList.remove("active");
+          underline.style.transform = "translateX(100%)";
+        }
+      }
+  
+      document.addEventListener("DOMContentLoaded", () => {
+        // Staff login handler
+        document.getElementById("staffLoginForm").addEventListener("submit", async function (event) {
+          event.preventDefault();
+          const username = document.getElementById("staffUsername").value.trim();
+          const password = document.getElementById("staffPassword").value;
+          const error = document.getElementById("staffErrorMessage");
+  
+          try {
+            const response = await fetch("/api/login", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ username, password, userType: "staff" })
+            });
+  
+            const data = await response.json();
+            if (response.ok && data.success) {
+              window.location.href = data.redirect;
+            } else {
+              error.textContent = data.message || "Login failed.";
+            }
+          } catch (err) {
+            error.textContent = "Server error.";
+          }
+        });
+  
+        // Student login handler using regNumber
+        document.getElementById("studentLoginForm").addEventListener("submit", async function (event) {
+          event.preventDefault();
+          const regNumber = document.getElementById("studentRegNumber").value.trim();
+          const password = document.getElementById("studentPassword").value;
+          const error = document.getElementById("studentErrorMessage");
+  
+          try {
+            const response = await fetch("/api/login", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ regNumber, password, userType: "student" })
+            });
+  
+            const data = await response.json();
+            if (response.ok && data.success) {
+              // Store student regNumber for student.html access
+              sessionStorage.setItem("regNumber", regNumber);
+              sessionStorage.setItem("userType","student")
+              window.location.href = data.redirect;
+            } else {
+              error.textContent = data.message || "Login failed.";
+            }
+          } catch (err) {
+            error.textContent = "Server error.";
+          }
+        });
+      });
+    </script>
+    
+  </body>
+  
+</html>

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Send Report Mail</title>
+  <style>
+    /* Global Styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #121212;
+  color: #e0e0e0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  animation: fadeIn 1s ease-in-out;
+}
+
+.container {
+  background-color: #1e1e1e;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+  border-radius: 15px;
+  width: 100%;
+  max-width: 500px;
+  padding: 40px;
+  animation: slideUp 0.5s ease-in-out;
+}
+
+h2 {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  color: #ffffff;
+  letter-spacing: 1px;
+}
+
+label {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #bbb;
+  margin-bottom: 10px;
+  display: block;
+  transition: all 0.3s ease;
+}
+
+input,
+select,
+button {
+  width: 100%;
+  padding: 14px;
+  margin-top: 10px;
+  border-radius: 8px;
+  border: 1px solid #444;
+  font-size: 1rem;
+  outline: none;
+  background-color: #333;
+  color: #e0e0e0;
+  transition: border-color 0.3s ease, transform 0.3s ease, background-color 0.3s ease;
+}
+
+input:focus,
+select:focus {
+  border-color: #4a90e2;
+  background-color: #444;
+  transform: scale(1.02);
+}
+
+select {
+  cursor: pointer;
+}
+
+button {
+  background-color: #4a90e2;
+  color: white;
+  font-weight: bold;
+  border: none;
+  margin-top: 20px;
+  cursor: pointer;
+  padding: 14px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background-color: #357ABD;
+  transform: translateY(-3px);
+}
+
+button:active {
+  background-color: #1d6fa5;
+  transform: translateY(2px);
+}
+
+.input-container {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+/* Label and Input Adjustments */
+.input-container input,
+.input-container select {
+  padding-left: 20px;
+}
+
+.input-container label {
+  position: absolute;
+  top: 12px;
+  left: 20px;
+  font-size: 1rem;
+  pointer-events: none;
+  transition: all 0.2s ease;
+  color: #bbb;
+}
+
+.input-container input:focus + label,
+.input-container select:focus + label {
+  top: -10px;
+  font-size: 0.8rem;
+  color: #4a90e2;
+}
+
+.input-container input:not(:placeholder-shown) + label,
+.input-container select:not(:placeholder-shown) + label {
+  top: -10px;
+  font-size: 0.8rem;
+  color: #4a90e2;
+}
+
+/* Animation Keyframes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+  .container {
+    padding: 30px;
+  }
+
+  h2 {
+    font-size: 2rem;
+  }
+
+  input,
+  select,
+  button {
+    font-size: 0.95rem;
+  }
+}
+
+/* Focus States */
+input:focus, select:focus, button:focus {
+  outline: none;
+  box-shadow: 0 0 5px 2px rgba(74, 144, 226, 0.7);
+}
+
+/* Hover Effects */
+input:hover, select:hover, button:hover {
+  background-color: #444;
+  border-color: #357abd;
+}
+
+/* Darker Elements on Active State */
+input:active, select:active, button:active {
+  background-color: #333;
+  border-color: #4a90e2;
+}
+    
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Send Report Mail</h2>
+
+    <form id="reportForm">
+      <div class="input-container">
+        <input type="text" id="name" name="name" readonly placeholder=" " />
+        <label for="name">Student Name</label>
+      </div>
+
+      <div class="input-container">
+        <input type="email" id="email" name="email" readonly placeholder=" " />
+        <label for="email">Student Email</label>
+      </div>
+
+      <div class="input-container">
+        <select id="template" name="template" required>
+          <option value="">-- Select a report --</option>
+          <option value="internshipReminder">Internship Summary</option>
+          <option value="documentMissing">Missing Documents</option>
+          <option value="performanceFeedback">Performance Feedback</option>
+        </select>
+        <label for="template">Select Report Template</label>
+      </div>
+      <button type="submit">Send Report</button>
+    </form>
+    
+  </div>
+
+</body>
+</html>
+
+  <script>
+    // Fill student info from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const name = urlParams.get("name") || "";
+    const email = urlParams.get("email") || "";
+    document.getElementById("name").value = name;
+    document.getElementById("email").value = email;
+
+    document.getElementById("reportForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const template = document.getElementById("template").value;
+
+      if (!template) {
+        alert("Please select a report template.");
+        return;
+      }
+
+      const payload = {
+        templateKey: template,
+        students: [{ name, email }]
+      };
+
+      console.log("Sending request with payload:", payload);
+      try {
+        const res = await fetch("/send-report", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const text = await res.text();
+        let data;
+
+        try {
+          data = JSON.parse(text);
+        } catch (parseError) {
+          console.error("Failed to parse JSON:", parseError);
+          console.error("Raw response text:", text);
+          alert("Server returned unexpected response. Please check logs.");
+          return;
+        }
+
+        console.log("Server response:", data);
+
+        if (res.ok) {
+          alert("Report mail sent successfully!");
+           // Check if window was opened via script
+          if (window.opener) {
+            window.close(); // Closes the window if it was opened via script
+          } else {
+            window.location.href = '/staff.html'; // Optionally, redirect the user if it's a manual window
+          }
+        } else {
+          alert("Error: " + (data.message || "Something went wrong."));
+        }
+
+      } catch (err) {
+        console.error("Fetch failed:", err);
+        alert("Failed to send mail. Please try again later.");
+      }
+    });
+  </script>
+</body>
+</html>

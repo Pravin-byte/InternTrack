@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            height: 100vh;
+            background-color: #121212;
+            margin: 0;
+            overflow: hidden;
+            color: #e0e0e0;
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+        }
+
+        .left-container {
+            width: 30%;
+            height: 100vh;
+            padding: 20px;
+            background-color: #1f1f2e;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .right-container {
+            margin-left: 30%;
+            width: 70%;
+            height: 100vh;
+            padding: 40px;
+            background: #1a1a1a;
+            text-align: center;
+            box-shadow: inset 0px 0px 10px rgba(255, 255, 255, 0.03);
+            overflow-y: auto;
+            color: #f0f0f0;
+            
+        }
+
+        button {
+            background-color: #282c34;
+            color: #00aaff;
+            border: 2px solid #00aaff;
+            padding: 12px;
+            cursor: pointer;
+            width: 80%;
+            margin: 10px 0;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #00aaff;
+            color: white;
+            border-color: #00aaff;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .details-container {
+            text-align: left;
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            background: #2a2a2a;
+            box-shadow: 0px 0px 10px rgba(0, 255, 255, 0.05);
+            width: 80%;
+            margin: auto;
+        }
+
+        .details-container p {
+            margin: 10px 0;
+            font-size: 16px;
+            color: #cccccc;
+        }
+
+        iframe {
+            flex:1;
+            margin-left: 20px;
+            width: 100%;
+            height: 650px;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.3);
+            background-color: #1a1a1a;
+        
+        }
+
+        #logout {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 12px 24px;
+            width: 100px;
+            background: #444; 
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            outline: none;
+            transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+            z-index: 1000;
+        }
+
+        #logout:hover {
+            transform: scale(1.05);
+            background: #006699;
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        #logout:active {
+            transform: scale(0.98);
+        }
+
+        #logout:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(0, 138, 255, 0.8);
+        }
+
+    </style>
+    <script>
+        let student = null;
+
+        async function loadStudentData() {
+            const regNo = sessionStorage.getItem("regNumber");
+            if (!regNo) {
+                alert("No student logged in!");
+                return;
+            }
+
+            try {
+                const response = await fetch('/students');
+                const students = await response.json();
+                student = students.find(s => s.regNumber === regNo);
+
+                if (!student) {
+                    alert("Student data not found!");
+                }
+            } catch (err) {
+                console.error("Error loading student data:", err);
+            }
+        }
+
+        function hideAll() {
+            document.getElementById("message").classList.add("hidden");
+            document.getElementById("detailsContainer").classList.add("hidden");
+            document.getElementById("formContainer").classList.add("hidden");
+        }
+
+        async function fetchDocumentsFromDrive(regNo) {
+            const response = await fetch(`/get-documents/${regNo}`);
+            const files = await response.json();
+            return files;
+        }
+
+        async function viewData() {
+            hideAll();
+
+            const detailsContainer = document.getElementById("detailsContainer");
+            detailsContainer.classList.remove("hidden");
+
+            if (!student) {
+                await loadStudentData(); // Load data only when needed
+            }
+
+            if (!student) {
+                detailsContainer.innerHTML = "<p>Student data not found.</p>";
+                return;
+            }
+
+            const documents = student.Documents || "";
+            const documentList = documents.split(",").map(doc => doc.trim()).filter(Boolean);
+
+            // Fetch files from Google Drive
+            const files = await fetchDocumentsFromDrive(student.regNumber);
+
+            // Display student details and dynamically render document links
+            detailsContainer.innerHTML = `
+                <div class="details-container">
+                    <h2>Student Details</h2>
+                    <p><strong>Register No:</strong> ${student.regNumber}</p>
+                    <p><strong>Name:</strong> ${student.name}</p>
+                    <p><strong>Mobile No:</strong> ${student.mobile}</p>
+                    <p><strong>Email id:</strong>${student.email}</p>
+                    <p><strong>Title:</strong> ${student.title}</p>
+                    <p><strong>Year:</strong> ${student.year}</p>
+                    <p><strong>Department:</strong> ${student.department}</p>
+                    <p><strong>Section:</strong> ${student.section}</p>
+                    <p><strong>Internship:</strong> ${student.internship}</p>
+                    <p><strong>Period:</strong> ${student.period}</p>
+                    <p><strong>Start Date:</strong> ${student.startDate}</p>
+                    <p><strong>End Date:</strong> ${student.endDate}</p>
+                    <p><strong>Company Name:</strong> ${student.companyName}</p>
+                    <p><strong>Placement Source:</strong> ${student.placementSource}</p>
+                    <p><strong>Stipend (Rs.):</strong> ${student.stipend}</p>
+                    <p><strong>Internship Type:</strong> ${student.internshipType}</p>
+                    <p><strong>Abroad / India:</strong> ${student.abroadIndia}</p>
+                    <p><strong>Documents Submitted:</strong> ${documentList.length > 0 ? documentList.join(", ") : "None"}</p>
+                    
+                    <!-- Display Links for Documents -->
+                    <h3>Internship Documents:</h3>
+                    ${files.length > 0 ? generateDocumentLinks(files) : '<p>No Files</p>'}
+                </div>
+            `;
+        }
+
+        function generateDocumentLinks(files) {
+            return files.map(file => {
+                return `
+                    <p><strong>${file.name}:</strong> <a href="${file.webViewLink}" target="_blank">View</a></p>
+                `;
+            }).join('');
+        }
+
+
+        function updateData() {
+            hideAll();
+            if (student) {
+                sessionStorage.setItem("studentData", JSON.stringify(student));
+            }
+            document.getElementById("formContainer").innerHTML = "<iframe src='update.html' frameborder='0'></iframe>";
+            document.getElementById("formContainer").classList.remove("hidden");
+        }
+
+        function addData() {
+            hideAll();
+            document.getElementById("formContainer").innerHTML = "<iframe src='internship_form.html'></iframe>";
+            document.getElementById("formContainer").classList.remove("hidden");
+        }
+        function confirmLogout() {
+            if (confirm("Are you sure you want to logout?")) {
+            window.location.href = "login.html";
+            }
+        }
+
+    </script>
+</head>
+<body>
+    <div class="container">
+        
+        <div class="left-container">
+            <button onclick="confirmLogout()" id="logout">Logout</button>
+
+            <button onclick="viewData()">View My Data</button>
+            <button onclick="updateData()">Update My Data</button>
+            <button onclick="addData()">Add Internship</button>
+        </div>
+        <div class="right-container">
+            <div id="message">
+                <h2>Welcome, Student</h2>
+                <p>Select an option to proceed.</p>
+            </div>
+            
+            <div id="detailsContainer" class="hidden"></div>
+            <div id="formContainer" class="hidden"></div>
+        </div>
+    </div>
+</body>
+</html>

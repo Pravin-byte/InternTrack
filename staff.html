@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Dashboard</title>
+    <style>
+      :root {
+          --primary-color: #1e90ff;
+          --accent-color: #4fa3ff;
+          --background-color: #121212;
+          --card-bg: #1e1e1e;
+          --glass-bg: rgba(30, 30, 30, 0.85);
+          --shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
+          --border-radius: 16px;
+          --text-color: #f1f1f1;
+          --transition: all 0.3s ease-in-out;
+      }
+  
+      body {
+          margin: 0;
+          font-family: 'Segoe UI', sans-serif;
+          background-color: var(--background-color);
+          color: var(--text-color);
+          display: flex;
+          height: 100vh;
+          overflow: hidden;
+      }
+  
+      .container {
+          display: flex;
+          width: 100%;
+      }
+  
+      .left-container {
+          width: 27%;
+          height: 100vh;
+          padding: 40px 20px;
+          background: var(--glass-bg);
+          backdrop-filter: blur(12px);
+          color: var(--text-color);
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          position: fixed;
+          top: 0;
+          left: 0;
+          z-index: 1000;
+          box-shadow: var(--shadow);
+          border-right: 1px solid rgba(255, 255, 255, 0.08);
+          transition: var(--transition);
+      }
+  
+      .view-button,
+      .filter-buttons,
+      .input-container {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 12px;
+          width: 100%;
+      }
+  
+      .filter-buttons,
+      .input-container {
+          display: none;
+          margin-top: 20px;
+      }
+  
+      button {
+          background-color: #2e2e2e;
+          color: #f5f5f5;
+          border: none;
+          padding: 12px;
+          font-size: 15px;
+          font-weight: 600;
+          border-radius: var(--border-radius);
+          box-shadow: var(--shadow);
+          cursor: pointer;
+          width: 100%;
+          transition: var(--transition);
+      }
+  
+      button:hover {
+          background-color: var(--accent-color);
+          color: #fff;
+          transform: scale(1.03);
+      }
+  
+      input {
+          padding: 10px;
+          width: 100%;
+          border: 1px solid #444;
+          border-radius: var(--border-radius);
+          font-size: 14px;
+          color: var(--text-color);
+          background-color: #2a2a2a;
+      }
+  
+      input:focus {
+          outline: none;
+          border-color: var(--primary-color);
+          box-shadow: 0 0 8px var(--primary-color);
+      }
+  
+      .right-container {
+          margin-left: 30%;
+          width: 70%;
+          height: 100vh;
+          overflow-y: auto;
+          background-color: var(--card-bg);
+          padding: 30px;
+          border-radius: var(--border-radius);
+          box-shadow: var(--shadow);
+          display: none;
+          transition: var(--transition);
+      }
+  
+      h3 {
+          margin-top: 0;
+          color: var(--primary-color);
+      }
+  
+      .table-wrapper {
+          overflow: auto;
+          max-height: 600px;
+          border-radius: 10px;
+          box-shadow: var(--shadow);
+      }
+  
+      table {
+          width: 100%;
+          border-collapse: separate;
+          border-spacing: 0;
+          background-color: var(--card-bg);
+          border-radius: 10px;
+          overflow: hidden;
+          font-size: 15px;
+          color: var(--text-color);
+      }
+  
+      th, td {
+          padding: 14px 16px;
+          text-align: center;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
+  
+      th {
+          position: sticky;
+          top: 0;
+          background-color: var(--primary-color);
+          color: #ffffff;
+          font-weight: 600;
+          z-index: 2;
+      }
+  
+      tr:nth-child(even) {
+          background-color: rgba(255, 255, 255, 0.03);
+      }
+  
+      tr:hover {
+          background-color: rgba(79, 163, 255, 0.1);
+          transition: background 0.3s ease;
+      }
+  
+      table thead tr:first-child th:first-child {
+          border-top-left-radius: 10px;
+      }
+  
+      table thead tr:first-child th:last-child {
+          border-top-right-radius: 10px;
+      }
+  
+      .update-btn, .cancel-btn {
+          border: none;
+          color: #fff;
+          padding: 8px 12px;
+          border-radius: 6px;
+          font-size: 14px;
+          cursor: pointer;
+          font-weight: 600;
+          transition: transform 0.2s ease, background-color 0.3s ease;
+      }
+  
+      .update-btn {
+          background-color: #ffc107;
+      }
+  
+      .update-btn:hover {
+          background-color: #e0a800;
+          transform: scale(1.05);
+      }
+  
+      .cancel-btn {
+          background-color: #dc3545;
+      }
+  
+      .cancel-btn:hover {
+          background-color: #c82333;
+          transform: scale(1.05);
+      }
+  
+      .input-container input {
+          width: 85%;
+          padding: 10px;
+          background-color: #2a2a2a;
+          border: 1px solid #444;
+      }
+  
+      .input-container button {
+          background-color: #444;
+          color: white;
+          width: 90%;
+      }
+  
+      .input-container button:hover {
+          background-color: #666;
+      }
+  
+      .edit-form {
+          display: none;
+          margin-top: 30px;
+          text-align: left;
+      }
+  
+      .edit-form input {
+          margin-bottom: 12px;
+      }
+  
+      #welcome-message {
+          margin-left: 700px;
+          text-align: center;
+          transition: opacity 1s ease-out;
+      }
+  
+      .welcome-message.fade-out {
+          opacity: 0;
+          display: none;
+      }
+  
+      #logout {
+          position: absolute;
+          top: 20px;
+          left: 20px;
+          width: 100px;
+          padding: 12px 24px;
+          background: #444;
+          color: white;
+          font-size: 14px;
+          font-weight: bold;
+          border-radius: 30px;
+          cursor: pointer;
+          box-shadow: var(--shadow);
+          transition: var(--transition);
+      }
+  
+      #logout:hover {
+          background: var(--accent-color);
+          transform: scale(1.05);
+      }
+  
+      #themeToggle {
+          position: absolute;
+          top: 20px;
+          right: 20px;
+          width: 100px;
+          background: #2e2e2e;
+          color: var(--text-color);
+          border: none;
+          padding: 10px 20px;
+          border-radius: 25px;
+          font-size: 14px;
+          cursor: pointer;
+          box-shadow: var(--shadow);
+          transition: var(--transition);
+      }
+  
+      #themeToggle:hover {
+          background: var(--accent-color);
+          color: #fff;
+          transform: scale(1.05);
+      }
+  
+      .documents-container {
+          display: none;
+          margin-top: 6px;
+          padding: 6px 8px;
+          background-color: #2a2a2a;
+          border-radius: 6px;
+          border: 1px solid #444;
+          max-width: 125px;
+          max-height: 50px;
+          font-size: 13px;
+          color: var(--text-color);
+          overflow-x: auto;
+          overflow-y: hidden;
+          white-space: nowrap;
+          text-align: left;
+      }
+  
+      .documents-container.show {
+          display: block;
+      }
+  
+      .documents-container a {
+          display: inline-block;
+          margin-right: 6px;
+          color: var(--primary-color);
+          text-decoration: none;
+          font-weight: 500;
+          padding: 4px 6px;
+          border-radius: 4px;
+          background-color: #333;
+          transition: background-color 0.3s ease;
+          max-width: 110px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+      }
+  
+      .documents-container a:hover {
+          background-color: #555;
+          color: #87cefa;
+          text-decoration: underline;
+      }
+  
+      .documents-container::-webkit-scrollbar {
+          height: 6px;
+      }
+  
+      .documents-container::-webkit-scrollbar-thumb {
+          background-color: #888;
+          border-radius: 3px;
+      }
+  
+      @media screen and (max-width: 1024px) {
+          .left-container {
+              width: 100%;
+              position: relative;
+              height: auto;
+          }
+  
+          .right-container {
+              margin-left: 0;
+              width: 100%;
+          }
+      }
+  
+      iframe {
+          border-radius: var(--border-radius);
+          box-shadow: var(--shadow);
+          margin-top: 20px;
+      }
+  
+      a button {
+          margin-top: 10px;
+      }
+  
+      .welcome-message {
+          display: block;
+          transition: opacity 1s ease-out;
+          margin-left: 700px;
+          text-align: center;
+      }
+  
+      .back {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+      }
+  
+      #back {
+          width: 150px;
+      }
+  </style>
+  
+  
+</head>
+<body>
+    <div class="container">
+      <!-- Left Container -->
+      
+      <div class="left-container">
+        <button onclick="confirmLogout()" id="logout">Logout</button>
+        <!--<button onclick="toggleTheme()" id="themeToggle">🌙</button>-->
+
+
+        <div class="view-button">
+          <button id="viewBtn" onclick="showFilters()">View Data</button><br><br>
+          <button id="addBtn" onclick="addData()">Add Internship</button>
+        </div>
+  
+        <div class="filter-buttons" style="display: none;">
+          <button onclick="filterData('cdc')">CDC</button>
+          <button onclick="filterData('non-cdc')">Non-CDC</button>
+          <button onclick="filterData('academic')">Academic</button>
+          <button onclick="filterData('industry')">Industry</button>
+          <button onclick="filterData('stipend')">Stipend > 100K</button>
+          <button onclick="filterData('abroad')">Abroad</button>
+          <button onclick="filterData('india')">India</button>
+          <button onclick="filterData('batch')">Filter by Batch</button>
+          <button onclick="filterData('company')">Filter by Company</button>
+          <a href="staff.html">
+            <button id="backToHomepage">Back to Homepage</button>
+          </a>
+        </div>
+  
+        <div class="input-container" style="display: none;">
+          <input type="text" id="inputField" placeholder="Enter value">
+          <button onclick="submitInput()">Submit</button>
+        </div>
+      </div>
+      
+      <!-- Welcome message (visible by default) -->
+      <div class="welcome-message" id="welcomeMessage">
+        <h1>Welcome to the InternTrack System</h1>
+        <p>We're excited to have you here! Let's get started.</p>
+      </div>
+
+      <!-- Right Container -->
+      <div class="right-container" id="rightContainer" style="display: none;">
+        
+        <h3 id="heading">Filtered Data</h3>
+        <div id="tableContainer" class="table-wrapper"></div>
+        <div id="formContainer" style="display: none;">
+          
+          <iframe id="iframe" src="internship_form.html" style="width: 100%; height: 600px; border: none;"></iframe>
+          <div class="back"><button id="back" onclick="backToTable()">← Back to Data</button></div>
+        </div>
+        <div id="documentLinks"></div>        
+        <div class="edit-form" id="editForm" style="display: none;">
+          <h3>Edit Student</h3>
+          <input type="text" id="regNumber" placeholder="Register Number" />
+          <input type="text" id="name" placeholder="Name" />
+          <input type="text" id="mobile" placeholder="Mobile" />
+          <input type="text" id="email" placeholder="Email" />
+          <input type="text" id="title" placeholder="Title" />
+          <input type="text" id="year" placeholder="Year" />
+          <input type="text" id="department" placeholder="Department" />
+          <input type="text" id="section" placeholder="Section" />
+          <input type="text" id="internship" placeholder="Internship" />
+          <input type="text" id="period" placeholder="Period" />
+          <input type="text" id="startDate" placeholder="Start Date" />
+          <input type="text" id="endDate" placeholder="End Date" />
+          <input type="text" id="companyName" placeholder="Company Name" />
+          <input type="text" id="placementSource" placeholder="Placement Source" />
+          <input type="text" id="stipend" placeholder="Stipend" />
+          <input type="text" id="internshipType" placeholder="Internship Type" />
+          <input type="text" id="abroadIndia" placeholder="Abroad/India" />
+          <button class="save-btn" onclick="saveEdit()">Save</button>
+          <button class="cancel-btn" onclick="cancelEdit()">Cancel</button>
+        </div>
+      </div>
+    </div>
+  
+    <script>
+      /* function toggleTheme() {
+        const isDark = document.body.classList.toggle('dark');
+        document.getElementById('themeToggle').textContent = isDark ? '🌞' : '🌙';
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      }
+
+      window.onload = () => {
+        const savedTheme = localStorage.getItem('theme');
+        const isDark = savedTheme === 'dark';
+        if (isDark) {
+          document.body.classList.add('dark');
+        }
+        document.getElementById('themeToggle').textContent = isDark ? '🌞' : '🌙';
+      };
+
+
+      // On load, apply saved theme
+      window.onload = () => {
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+          document.body.classList.add('dark');
+        }
+      };
+      document.addEventListener('DOMContentLoaded', () => {
+          // Show welcome message on page load
+          const welcomeMessage = document.getElementById("welcomeMessage");
+
+      });*/
+
+      function confirmLogout() {
+            if (confirm("Are you sure you want to logout?")) {
+            window.location.href = "login.html";
+            }
+        }
+
+      let students = [];
+      let selectedFilter = null;
+      let editingIndex = null;
+  
+      fetch('/students')
+        .then(res => res.json())
+        .then(data => {
+          students = data;
+          displayTable();
+        });
+  
+      function showFilters() {
+        document.querySelector(".view-button").style.display = "none";
+        document.querySelector(".filter-buttons").style.display = "flex";
+      }
+  
+      function askInput(filterType) {
+        selectedFilter = filterType;
+        document.querySelector(".filter-buttons").style.display = "none";
+        document.querySelector(".input-container").style.display = "flex";
+        let inputField = document.getElementById("inputField");
+        inputField.value = "";
+        inputField.focus();
+      }
+  
+      function submitInput() {
+        let inputField = document.getElementById("inputField");
+        if (!inputField || !inputField.value.trim()) return;
+        filterData(selectedFilter, inputField.value.trim());
+      }
+  
+      function filterData(filterType, value = null) {
+        if (!value && ["batch", "company"].includes(filterType)) {
+          askInput(filterType);
+          return;
+        }
+        document.getElementById("heading").innerText = value ? `Filtered by ${filterType}: ${value}`: `Filtered by ${filterType}`;
+        let filtered = getFilteredStudents(filterType, value);
+        displayTable(filtered);
+  
+        document.querySelector(".input-container").style.display = "none";
+        document.querySelector(".filter-buttons").style.display = "flex";
+        document.getElementById("rightContainer").style.display = "block";
+        welcomeMessage.classList.add("fade-out");
+        
+      }
+  
+      function getFilteredStudents(filterType, value) {
+        return students.filter(student => {
+          switch (filterType) {
+            case "batch":
+              return student.year.toString() === value;
+            case "company":
+              return student.companyName?.toLowerCase() === value.toLowerCase();
+            case "cdc":
+              return student.placementSource === "CDC";
+            case "non-cdc":
+              return student.placementSource !== "CDC";
+            case "academic":
+              return student.internshipType?.toLowerCase() === "academic";
+            case "industry":
+              return student.internshipType?.toLowerCase() === "industry";
+            case "stipend":
+              return parseInt(student.stipend || 0) > 100000;
+            case "abroad":
+              return student.abroadIndia?.toLowerCase() === "abroad";
+            case "india":
+              return student.abroadIndia?.toLowerCase() === "india";
+            default:
+              return true;
+          }
+        });
+      }
+  
+      function displayTable(filteredStudents = students) {
+            let tableContainer = document.getElementById("tableContainer");
+            
+
+            if (filteredStudents.length === 0) {
+                tableContainer.innerHTML = `<p style="color: red; text-align: center;">No Records Found</p>`;
+                return;
+            }
+
+            let tableHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Register No</th>
+                            <th>Name</th>
+                            <th>Mobile</th>
+                            <th>Email</th>
+                            <th>Title</th>
+                            <th>Year</th>
+                            <th>Department</th>
+                            <th>Section</th>
+                            <th>Internship</th>
+                            <th>Period</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Company Name</th>
+                            <th>Placement Source</th>
+                            <th>Stipend</th>
+                            <th>Internship Type</th>
+                            <th>Abroad/India</th>
+                            <th colspan="4" class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            filteredStudents.forEach((student, index) => {
+                tableHTML += `
+                    <tr>
+                        <td>${student.regNumber || ''}</td>
+                        <td>${student.name || ''}</td>
+                        <td>${student.mobile || ''}</td>
+                        <td>${student.email || ''}</td>
+                        <td>${student.title || ''}</td>
+                        <td>${student.year || ''}</td>
+                        <td>${student.department || ''}</td>
+                        <td>${student.section || ''}</td>
+                        <td>${student.internship || ''}</td>
+                        <td>${student.period || ''}</td>
+                        <td>${student.startDate || ''}</td>
+                        <td>${student.endDate || ''}</td>
+                        <td>${student.companyName || ''}</td>
+                        <td>${student.placementSource || ''}</td>
+                        <td>${student.stipend || ''}</td>
+                        <td>${student.internshipType || ''}</td>
+                        <td>${student.abroadIndia || ''}</td>
+                        <!-- Add this inside your table rows -->
+                        <td>
+                          <button onclick="fetchDocuments('${student.regNumber}')">Documents</button>
+                          <div id="documents-${student.regNumber}" class="documents-container"></div>
+                        </td>
+                        <td>
+                            <button onclick="editStudent('${student.regNumber}')">Edit</button>
+                        </td>
+                        <td>
+                          <button onclick="openReportPage('${student.name}', '${student.email}')">Report</button>
+                        </td>
+                        <td>
+                          <button onclick="deleteStudent('${student.regNumber}')" style="background-color: red; color: white;">Delete</button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            tableHTML += `</tbody></table>`;
+            tableContainer.innerHTML = tableHTML;
+        }
+
+  
+        function editStudent(regNumber) {
+          welcomeMessage.classList.add("fade-out");
+          const student = students.find(s => s["regNumber"] == regNumber);
+
+          if (!student) {
+              alert("Student not found!");
+              return;
+          }
+
+          document.getElementById("regNumber").value = student.regNumber;
+          document.getElementById("name").value = student.name;
+          document.getElementById("mobile").value = student.mobile;
+          document.getElementById("email").value = student.email;
+          document.getElementById("title").value = student.title;
+          document.getElementById("year").value = student.year;
+          document.getElementById("department").value = student.department;
+          document.getElementById("section").value = student.section;
+          document.getElementById("internship").value = student.internship;
+          document.getElementById("period").value = student.period;
+          document.getElementById("startDate").value = student.startDate;
+          document.getElementById("endDate").value = student.endDate;
+          document.getElementById("companyName").value = student.companyName;
+          document.getElementById("placementSource").value = student.placementSource;
+          document.getElementById("stipend").value = student.stipend;
+          document.getElementById("internshipType").value = student.internshipType;
+          document.getElementById("abroadIndia").value = student.abroadIndia;
+
+          document.getElementById("editForm").style.display = "block";
+          document.getElementById("rightContainer").style.display = "block";
+          document.getElementById("tableContainer").style.display = "none";
+      }
+
+
+      function saveEdit() {
+        const regNumber = document.getElementById("regNumber").value;
+
+        // If regNumber is empty, don't proceed with the save operation
+        if (!regNumber) {
+            alert("Registration number is required!");
+            return;
+        }
+
+        // Fetch existing student data to preserve document-related fields
+        const existingStudent = students.find(s => s.regNumber === regNumber);
+        if (!existingStudent) {
+            alert("Student not found!");
+            return;
+        }
+
+        // Prepare the updated student data from the form, preserving the document fields from existing data
+        const updatedStudent = {
+            regNumber: regNumber,
+            name: document.getElementById("name").value,
+            mobile: document.getElementById("mobile").value,
+            email: document.getElementById("email").value,
+            title: document.getElementById("title").value,
+            year: document.getElementById("year").value,
+            department: document.getElementById("department").value,
+            section: document.getElementById("section").value,
+            internship: document.getElementById("internship").value,
+            period: document.getElementById("period").value,
+            startDate: document.getElementById("startDate").value,
+            endDate: document.getElementById("endDate").value,
+            companyName: document.getElementById("companyName").value,
+            placementSource: document.getElementById("placementSource").value,
+            stipend: document.getElementById("stipend").value,
+            internshipType: document.getElementById("internshipType").value,
+            abroadIndia: document.getElementById("abroadIndia").value,
+
+            // Preserve existing document-related fields (such as document submission status)
+            signedPermissionLetterSubmitted: existingStudent.signedPermissionLetterSubmitted || 'No',
+            offerLetterSubmitted: existingStudent.offerLetterSubmitted || 'No',
+            completionCertificateSubmitted: existingStudent.completionCertificateSubmitted || 'No',
+            internshipReportSubmitted: existingStudent.internshipReportSubmitted || 'No',
+            studentFeedbackSubmitted: existingStudent.studentFeedbackSubmitted || 'No',
+            employerFeedbackSubmitted: existingStudent.employerFeedbackSubmitted || 'No',
+        };
+
+        // Check if any required field is missing
+        if (!updatedStudent.name || !updatedStudent.mobile || !updatedStudent.companyName) {
+            alert("Please fill in all required fields.");
+            return;
+        }
+
+        console.log("Updated student data: ", updatedStudent);  // Log the data being sent to the server
+
+        // Make the PUT request to update the student data
+        fetch(`/students/${regNumber}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updatedStudent),
+        })
+        .then(res => {
+            if (!res.ok) {
+                throw new Error("Failed to update student data.");
+            }
+            return res.json();
+        })
+        .then(data => {
+            // Find the student by regNumber and update the corresponding data in the frontend array
+            const studentIndex = students.findIndex(s => s.regNumber === regNumber);
+            if (studentIndex !== -1) {
+                students[studentIndex] = updatedStudent;
+            } else {
+                alert("Student not found in the list.");
+                return;
+            }
+
+            // Re-render the table with updated data
+            displayTable();
+
+            // Clear the edit mode (assuming cancelEdit handles this)
+            cancelEdit();
+
+            // Optionally, show a success message
+            alert("Student data updated successfully!");
+        })
+        .catch(err => {
+            // Handle errors
+            alert("Failed to save changes: " + err.message);
+        });
+    }
+
+      function cancelEdit() {
+        editingIndex = null;
+        document.getElementById("editForm").style.display = "none";
+        document.getElementById("tableContainer").style.display = "block";
+      }
+
+      function addData() {
+        welcomeMessage.classList.add("fade-out");
+        document.getElementById("tableContainer").style.display = "none";
+        document.getElementById("editForm").style.display = "none";
+        document.getElementById("formContainer").style.display = "block";
+        document.getElementById("rightContainer").style.display = "block";
+        document.getElementById("heading").style.display="none"
+      }
+
+      function backToTable() {
+        document.getElementById("formContainer").style.display = "none";
+        document.getElementById("tableContainer").style.display = "block";
+        document.getElementById("heading").style.display="block"
+      }
+      
+      async function fetchDocuments(regNumber) {
+        const container = document.getElementById(`documents-${regNumber}`);
+        const button = event.target;
+
+        if (!container) {
+            console.error(`Container not found for regNumber ${regNumber}`);
+            return;
+        }
+
+        // Toggle off if already showing
+        if (container.classList.contains("show")) {
+            container.classList.remove("show");
+            container.innerHTML = ""; // Optionally clear the contents
+            button.textContent = "Documents";
+            return;
+        }
+
+        container.innerHTML = "Fetching documents...";
+
+        try {
+            const response = await fetch(`/get-documents/${regNumber}?_=${new Date().getTime()}`);
+            const data = await response.json();
+            console.log("Fetched document data:", data);
+
+            container.innerHTML = ""; // Clear loading
+
+            if (!Array.isArray(data) || data.length === 0) {
+                container.textContent = "No file links available.";
+                return;
+            }
+
+            container.classList.add("show");
+            button.textContent = "Retract";
+
+            data.forEach(file => {
+                const a = document.createElement('a');
+                a.href = file.webViewLink;
+                a.textContent = `📎 ${file.name}`;
+                a.target = "_blank";
+                a.className = "document-link";
+                container.appendChild(a);
+            });
+
+        } catch (err) {
+            console.error("Error fetching documents:", err);
+            container.textContent = "Failed to load documents.";
+            button.textContent = "Documents";
+        }
+    }
+
+
+    async function deleteStudent(regNumber) {
+      // Confirm the deletion action
+      if (!confirm(`Are you sure you want to delete student ${regNumber} and their documents?`)) return;
+
+      try {
+        // Make the DELETE request to delete student data and files
+        const response = await fetch(`/delete-student/${regNumber}`, {
+          method: 'DELETE',
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          // Show success message
+          alert(result.message || "Student and documents deleted successfully.");
+
+          // Remove the deleted student from the frontend students array
+          students = students.filter(student => student.regNumber !== regNumber);
+
+          // Re-render the table with the updated list of students
+          displayTable();
+        } else {
+          // Show failure message if the request fails
+          alert("Failed to delete student: " + result.message);
+        }
+      } catch (error) {
+        // Handle network or unexpected errors
+        console.error("Error deleting student:", error);
+        alert("An error occurred while deleting the student.");
+      }
+    }
+    function openReportPage(name, email) {
+      const url = `report.html?name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}`;
+      window.location.href = url;
+
+    }
+
+    </script>
+  </body>
+  
+</html>
