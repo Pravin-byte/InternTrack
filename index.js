@@ -18,10 +18,48 @@ const mailerRoutes = require('./mailer');
 app.use('/', mailerRoutes);
 
 let students = [];
-const users = require('./users.json');
+const users = require('./users.json');//login details
 
 const apikeys = require('./apikey.json');  // Make sure this has the correct path
 const SCOPE = ['https://www.googleapis.com/auth/drive', 'https://www.googleapis.com/auth/spreadsheets']; // Add both Sheets and Drive scopes
+
+const ROOT_FOLDER_NAME = ''; // root folder name
+const ROOT_FOLDER_ID = ""; // root folder ID
+
+// Google Sheets configurations
+const sheetId = ''; //your Google sheet id
+const sheetName = 'Sheet1';  // Adjust if needed
+
+
+// GoogleAuth initialization for both Sheets and Drive
+const auth = new GoogleAuth({
+  keyFile: 'apikey.json',  // Path to your service account key file
+  scopes: SCOPE  // Both Google Sheets and Google Drive scopes
+});
+
+
+// Initialize the Google Sheets API client
+const sheets = google.sheets({ version: 'v4', auth });
+
+// Initialize the Google Drive API client
+let drive;
+
+//Initialize Google Drive Client
+async function initializeDrive() {
+  const authClient = await auth.getClient();  // Use getClient() to authenticate
+  drive = google.drive({ version: 'v3', auth: authClient });
+  console.log('Google Drive API client initialized');
+}
+
+// Initialize Google Drive on server start
+initializeDrive().catch(err => console.error('Failed to initialize Google Drive client:', err));
+
+app.use((req, res, next) => {
+  if (!drive) {
+    return res.status(500).json({ message: 'Google Drive API client is not initialized yet.' });
+  }
+  next();
+});
 
 
 const bcrypt = require('bcrypt');
@@ -180,38 +218,6 @@ const fixedHeaders = [
   'department'
 ];
 
-// GoogleAuth initialization for both Sheets and Drive
-const auth = new GoogleAuth({
-  keyFile: 'apikey.json',  // Path to your service account key file
-  scopes: SCOPE  // Both Google Sheets and Google Drive scopes
-});
-
-// Initialize the Google Sheets API client
-const sheets = google.sheets({ version: 'v4', auth });
-
-// Initialize the Google Drive API client
-let drive;
-
-// Step 2: Initialize Google Drive Client
-async function initializeDrive() {
-  const authClient = await auth.getClient();  // Use getClient() to authenticate
-  drive = google.drive({ version: 'v3', auth: authClient });
-  console.log('Google Drive API client initialized');
-}
-
-// Initialize Google Drive on server start
-initializeDrive().catch(err => console.error('Failed to initialize Google Drive client:', err));
-
-app.use((req, res, next) => {
-  if (!drive) {
-    return res.status(500).json({ message: 'Google Drive API client is not initialized yet.' });
-  }
-  next();
-});
-
-// Google Sheets configurations
-const sheetId = '1KWimNLAkpyBt3Ilr4DGpM7apk-x2DUCZHUJhsT7PjDc';
-const sheetName = 'Sheet1';  // Adjust if needed
 
 // Fetch all student data from the Google Sheet
 async function getSheetData() {
@@ -393,8 +399,6 @@ const upload = multer({
   { name: 'studentFeedback', maxCount: 1 }
 ]);
 
-const ROOT_FOLDER_NAME = 'Drive Api'; // This is just for readability
-const ROOT_FOLDER_ID = "1hgPPRDgNEL5B2-fEY8I2CCN52R7ETQvm"; // Outer root ID
 
 async function deleteStudentFolderFromDrive(regNumber, name, year) {
   try {
@@ -508,7 +512,7 @@ async function createGoogleDriveFolder(authClient, year, regNumber, name) {
       requestBody: {
         role: 'writer',
         type: 'user',
-        emailAddress: 'pravin2210019@ssn.edu.in',
+        emailAddress: '',//your mail id
       },
     });
     console.log(`✅ Google Drive Folder Created: https://drive.google.com/drive/folders/${studentFolderId}`);
@@ -548,7 +552,7 @@ async function uploadFileToDrive(authClient, localPath, folderId, fileName) {
       requestBody: {
         type: 'user',
         role: 'reader',
-        emailAddress: 'pravin2210019@ssn.edu.in',
+        emailAddress: '',//your mail id
       },
     });
     console.log(`✅ File shared with pravin2210019@ssn.edu.in`);
